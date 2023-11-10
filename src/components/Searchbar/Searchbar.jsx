@@ -1,6 +1,6 @@
 import css from "./Searchbar.module.css";
 
-export const Searchbar = ({onSubmit, onChange, query}) => {
+export const Searchbar = ({onSubmit}) => {
     return (
   <form className={css.searchForm} type="submit" onSubmit={onSubmit}>
 
@@ -9,8 +9,6 @@ export const Searchbar = ({onSubmit, onChange, query}) => {
       type="text"
       autoComplete="off"
                     placeholder="Search images and photos"
-                    // onChange={evt => onChange(evt.target.value)}
-                    // value={query}
                 />
                 
                 <button className={css.searchFormButton}>
