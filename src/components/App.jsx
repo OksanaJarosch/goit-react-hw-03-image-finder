@@ -2,7 +2,7 @@ import { Component } from "react";
 import { Searchbar } from "./Searchbar/Searchbar";
 import { fetchPhotos } from "services/api";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
-
+import { Button } from "./Button/Button";
 
 
 export class App extends Component {
@@ -18,12 +18,11 @@ export class App extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
-    // const LS_KEY = "images";
 
     if (page !== prevState.page || query !== prevState.query) {
 
       try {
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
         const fetch = await fetchPhotos(query, page);
 
         this.setState(prevState => {
@@ -34,22 +33,30 @@ export class App extends Component {
         });
 
       } catch (error) {
-        this.setState({error: true})
+        this.setState({ error: true })
       }
-
     }
-    // if (gallery !== prevState.gallery) {
-    //     localStorage.setItem(LS_KEY, JSON.stringify(gallery));
-    // }
   }
 
 
-  handleSubmit = evt => { 
+  handleSubmit = evt => {
     evt.preventDefault()
 
     const newQuery = evt.target.elements[0].value;
-    return this.setState({query: newQuery, page: 1, gallery: []})
+    return this.setState({
+      query: newQuery,
+      page: 1,
+      gallery: []
+    })
   };
+
+  handleLoadMore = () => {
+    this.setState(prevState => {
+      return {
+        page: prevState.page + 1
+      }
+})
+  }
 
 
   render() {
@@ -59,7 +66,12 @@ export class App extends Component {
     <>
       <Searchbar query={this.state.query} onSubmit={this.handleSubmit}></Searchbar>
       {isLoading && <p>Loading...</p>}
+      {gallery.length !== 0 && (
+      <div>
       <ImageGallery gallery={gallery}></ImageGallery>
+          <Button onClick={this.handleLoadMore} btnName="Load more"></Button>
+        </div>
+      )} 
     </>
   );
     };
