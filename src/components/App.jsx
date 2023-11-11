@@ -40,17 +40,16 @@ export class App extends Component {
 
       } catch (error) {
         this.setState({ error: true })
-      }
+      } 
     }
   }
 
 
-  handleSubmit = evt => {
-    evt.preventDefault()
+  handleSubmit = value => {
 
-    const newQuery = evt.target.elements[0].value;
+    // const newQuery = evt.target.elements[0].value;
     return this.setState({
-      query: newQuery,
+      query: value.query,
       page: 1,
       gallery: [],
       totalPages: null,
@@ -74,7 +73,7 @@ export class App extends Component {
   return (
     <div className={css.appContainer}>
 
-      <Searchbar query={this.state.query} onSubmit={this.handleSubmit}></Searchbar>
+      <Searchbar onSubmit={this.handleSubmit}></Searchbar>
 
       {isLoading && (<ThreeDots
 height="80" 
