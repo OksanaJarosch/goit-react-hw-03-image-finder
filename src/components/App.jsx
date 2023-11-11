@@ -15,7 +15,7 @@ export class App extends Component {
     page: 1,
     totalPages: null,
     isLoading: false,
-    error: false,
+    error: null,
   };
 
 
@@ -23,7 +23,6 @@ export class App extends Component {
     const { query, page } = this.state;
 
     if (page !== prevState.page || query !== prevState.query) {
-
       try {
         this.setState({ isLoading: true });
         const fetch = await fetchPhotos(query, page);
@@ -39,7 +38,7 @@ export class App extends Component {
         });
 
       } catch (error) {
-        this.setState({ error: true })
+        this.setState({ error, isLoading: false,})
       } 
     }
   }
@@ -47,7 +46,6 @@ export class App extends Component {
 
   handleSubmit = value => {
 
-    // const newQuery = evt.target.elements[0].value;
     return this.setState({
       query: value.query,
       page: 1,
@@ -66,7 +64,7 @@ export class App extends Component {
 
 
   render() {
-    const { isLoading, gallery, page, totalPages } = this.state;
+    const { isLoading, gallery, page, totalPages, error } = this.state;
     const galleryImages = gallery.length !== 0;
     const notLastPage = page < totalPages;
 
@@ -75,20 +73,22 @@ export class App extends Component {
 
       <Searchbar onSubmit={this.handleSubmit}></Searchbar>
 
+      {error && <p className={css.message}>Oops, something went wrong, please try again later.</p>}
+
       {isLoading && (<ThreeDots
-height="80" 
-width="80" 
-color="#303f9f"
-ariaLabel="three-dots-loading"
-visible={true}
- />)}
+      height="80" 
+      width="80" 
+      color="#303f9f"
+      ariaLabel="three-dots-loading"
+      visible={true}
+      />)}
 
       {galleryImages && <ImageGallery gallery={gallery}></ImageGallery>} 
       
       {galleryImages && (
         notLastPage
           ? <Button onClick={this.handleLoadMore} btnName="Load more"></Button>
-          : <p className={css.noMoreImg}>We're sorry, but you've reached the end of search results.</p>
+          : <p className={css.message}>We're sorry, but you've reached the end of search results.</p>
       )} 
     </div>
   );

@@ -11,20 +11,16 @@ export const Searchbar = ({onSubmit}) => {
       onSubmit={(values, actions) => {
         onSubmit(values);
           actions.resetForm();
-      }}
-  >
-
+      }}>
   <Form className={css.searchForm} >
-
     <Field
       className={css.searchFormInput}
       type="text"
       autoComplete="off"
       name="query"
-                    placeholder="Search images and photos"
-                />
-                
-                <button className={css.searchFormButton}>
+      placeholder="Search images and photos"
+    />       
+      <button className={css.searchFormButton}>
       <span className={css.searchFormButtonLabel}>Search</span>
     </button>
   </Form>
