@@ -5,9 +5,9 @@ export const ImageGallery = ({gallery}) => {
     return (
         <ul className={css.imageGallery}>
             {gallery.map(item => {
-               const { id, webformatURL, tags } = item;
+               const { id, webformatURL, largeImageURL, tags } = item;
                 return (
-            <ImageGalleryItem image={webformatURL} tags={tags} key={id}></ImageGalleryItem>
+                    <ImageGalleryItem image={webformatURL} largeImage={largeImageURL} tags={tags} key={id}></ImageGalleryItem>
                 )
             })
 }
