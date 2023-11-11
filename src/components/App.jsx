@@ -3,6 +3,7 @@ import { Searchbar } from "./Searchbar/Searchbar";
 import { fetchPhotos } from "services/api";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { Button } from "./Button/Button";
+import css from "./App.module.css";
 
 
 export class App extends Component {
@@ -11,6 +12,7 @@ export class App extends Component {
     gallery: [],
     query: "",
     page: 1,
+    totalPages: null,
     isLoading: false,
     error: false,
   };
@@ -24,11 +26,15 @@ export class App extends Component {
       try {
         this.setState({ isLoading: true });
         const fetch = await fetchPhotos(query, page);
+        console.log(fetch);
 
         this.setState(prevState => {
+          const {hits,totalHits } = fetch;
+
           return {
-            gallery: [...prevState.gallery, ...fetch.hits],
+            gallery: [...prevState.gallery, ...hits],
             isLoading: false,
+            totalPages: Math.ceil(totalHits / 12),
           }
         });
 
@@ -46,7 +52,8 @@ export class App extends Component {
     return this.setState({
       query: newQuery,
       page: 1,
-      gallery: []
+      gallery: [],
+      totalPages: null,
     })
   };
 
@@ -60,19 +67,23 @@ export class App extends Component {
 
 
   render() {
-    const { isLoading, gallery } = this.state;
+    const { isLoading, gallery, page, totalPages } = this.state;
     console.log(this.state);
+    const galleryImages = gallery.length !== 0;
+    const notLastPage = page < totalPages;
+    console.log(page);
+    console.log(totalPages);
+
   return (
-    <>
+    <div className={css.appContainer}>
       <Searchbar query={this.state.query} onSubmit={this.handleSubmit}></Searchbar>
       {isLoading && <p>Loading...</p>}
-      {gallery.length !== 0 && (
-      <div>
-      <ImageGallery gallery={gallery}></ImageGallery>
-          <Button onClick={this.handleLoadMore} btnName="Load more"></Button>
-        </div>
+
+      {galleryImages && <ImageGallery gallery={gallery}></ImageGallery>} 
+      
+      {galleryImages && (notLastPage ? <Button onClick={this.handleLoadMore} btnName="Load more"></Button> : <p className={css.noMoreImg}>We're sorry, but you've reached the end of search results.</p>
       )} 
-    </>
+    </div>
   );
     };
   };
